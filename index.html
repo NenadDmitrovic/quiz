@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+</head>
+<body>
+    <form action="" id="quiz"></form>
+    <button id="submit">Submit</button>
+
+    <script>
+        let json = '{"quiz":{"q1":{"question":"Which one is correct team name in NBA?","options":["New York Bulls","Los Angeles Kings","Golden State Warriros","Huston Rocket"],"answer":"Huston Rocket"},"q2":{"question":"\'Namaste\' is a traditional greeting in which Asian language?","options":["Hindi","Mandarin","Nepalese","Thai"],"answer":"Hindi"},"q3":{"question":"The Spree river flows through which major European capital city?","options":["Berlin","Paris","Rome","London"],"answer":"Berlin"},"q4":{"question":"Which famous artist had both a \'Rose Period\' and a \'Blue Period\'?","options":["Pablo Picasso","Vincent van Gogh","Salvador Dalí","Edgar Degas"],"answer":"Pablo Picasso"}}}'
+
+        let quiz = document.getElementById("quiz");
+        let data = JSON.parse(json);
+
+        for (let key in data.quiz) {
+            if (data.quiz.hasOwnProperty(key)) {
+                let questionItem = data.quiz[key];
+                let html = "<div>";
+                html += "<div><h2>Question " + key.substr(1) + ": " + questionItem.question + "</h2></div>";
+                html += "<div>";
+                for (let i = 0; i < questionItem.options.length; i++) {
+                    html += "<div>";
+                    html += "<input type=\"radio\" name=\"" + key + "_option\" value=\"" + questionItem.options[i] + "\">" + questionItem.options[i];
+                    html += "</div>";
+                }
+                html += "</div>";
+                html += "</div>";
+
+                quiz.innerHTML += html;
+
+                let submitButton = document.getElementById("submit");
+                submitButton.onclick = function() {
+                for (let key in data.quiz) {
+                    if (data.quiz.hasOwnProperty(key)) {
+                    let selectedOption = document.querySelector('input[name="' + key + '_option"]:checked');
+                    if (selectedOption) {
+                        let answer = selectedOption.value;
+                        localStorage.setItem(key, answer);
+                    }
+                    }
+                }
+                }
+            }
+            for(let key in data.quiz) {
+                if(data.quiz.hasOwnProperty(key)) {
+                    let answer = localStorage.getItem(key);
+                    if(answer) {
+                        let radioButton = document.querySelector('input[name="' + key + '_option"][value="' + answer + '"]');
+                        if(radioButton) {
+                            radioButton.checked = true;
+                        }
+                    }
+                }
+            }
+
+        }
+    </script>
+</body>
+</html>
